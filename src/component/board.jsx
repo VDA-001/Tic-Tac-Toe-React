@@ -1,8 +1,10 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import * as utils from '../utils/function '
+import {findWinner, isBoxesFilled} from './function'
 import Box from './board-box'
-import storage from '../storage/storage'
+import {Storage} from '../storage/storage'
+import  '../css/board.css'
+import '../css/buttons.css'
 
 export class BoardComponent extends React.Component{
     constructor(props){
@@ -10,7 +12,7 @@ export class BoardComponent extends React.Component{
         this.state={
             BoxArray:Array(9).fill(null),
             history:[],
-            IsNext:true
+            IsNext:false
         }
     }
 
@@ -20,11 +22,11 @@ export class BoardComponent extends React.Component{
         var boxes=this.state.BoxArray.slice()
         let history=this.state.history
 
-        if(utils.findWinner(boxes) || boxes[index]){
+        if(findWinner(boxes) || boxes[index]){
             return
         }
 
-        if(utils.isBoxesFilled(boxes) === true){
+        if(isBoxesFilled(boxes) === true){
             return
         }
 
@@ -49,8 +51,8 @@ export class BoardComponent extends React.Component{
     }
 
     render(){
-        let winner=utils.findWinner(this.state.BoxArray)
-        let isFilled=utils.isBoxesFilled(this.state.BoxArray)
+        let winner=findWinner(this.state.BoxArray)
+        let isFilled=isBoxesFilled(this.state.BoxArray)
         let status
         if(winner){
             status=`The winner is ${winner}`
@@ -62,7 +64,7 @@ export class BoardComponent extends React.Component{
             status=`It's ${(this.state.isNext ? 'x' : 'o' )}'s turn`
         }
         return(
-            <div>
+            <div className="boardPage">
                 <Link to="/" className="LinkButton">Go back to Dashboard</Link>
                 <div className="BoardWrapper">
                     <div className="Board">
@@ -87,12 +89,12 @@ export class BoardComponent extends React.Component{
                         <ul className="HistoryList">
                             {this.state.history.length === 0 && <span>No moves to show</span>}
 
-                            {this.state.history.length !=0 && this.state.history.map((index,value) => {
+                            {this.state.history.length !==0 && this.state.history.map((value,index) => {
                                 return <li key={index}>Move {index+1}: <strong>{value}</strong></li>
                             })}
                         </ul>
                     </div>
-                    {winner && <div className="BoardFooter"><button className="btn" onClick={this.handleRestart}>Restart Game</button></div>}
+                    {(winner || isFilled) && <div className="BoardFooter"><button className="btn" onClick={this.handleRestart}>Restart Game</button></div>}
                 </div>
             </div>
         )

@@ -1,11 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import {BrowserRouter, Route} from 'react-router-dom'
+import { BoardComponent } from './component/board';
+import { Scoreboard } from './component/scoreboard';
+import './css/index.css';
 import reportWebVitals from './reportWebVitals';
+
+class App extends React.Component{
+  render(){
+    return(
+      <div className="app">
+        <BrowserRouter>
+          <Route exact path="/" component={Scoreboard} />
+          <Route path="/board" component={BoardComponent} />
+        </BrowserRouter>
+      </div>
+    )
+  }
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <h1>Hello</h1> 
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
